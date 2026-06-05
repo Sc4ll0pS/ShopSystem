@@ -1,0 +1,112 @@
+<UserControl x:Class="ShopSystem.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ShopSystem.ViewModels"
+             xmlns:local="clr-namespace:ShopSystem.Helpers">
+    <UserControl.DataContext>
+        <vm:DashboardViewModel/>
+    </UserControl.DataContext>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="8">
+
+            <!-- Title row -->
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Dashboard" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}"/>
+                    <TextBlock Text="Overview across all 3 databases" FontSize="13"
+                               Foreground="{StaticResource MutedBrush}"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="Refresh" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding RefreshCommand}" VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- KPI cards -->
+            <UniformGrid Columns="3" Margin="0,0,0,16">
+
+                <Border Style="{StaticResource Card}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="Total Products" Style="{StaticResource FormLabel}"/>
+                        <TextBlock Text="{Binding TotalProducts}" FontSize="36" FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"/>
+                        <TextBlock Foreground="{StaticResource WarningBrush}" FontSize="12">
+                            <Run Text="{Binding LowStock}"/>
+                            <Run Text=" items low stock"/>
+                        </TextBlock>
+                        <TextBlock Text="Database: products.db" FontSize="11"
+                                   Foreground="{StaticResource MutedBrush}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="Total Customers" Style="{StaticResource FormLabel}"/>
+                        <TextBlock Text="{Binding TotalCustomers}" FontSize="36" FontWeight="Bold"
+                                   Foreground="{StaticResource SuccessBrush}"/>
+                        <TextBlock Text="Registered members" FontSize="12"
+                                   Foreground="{StaticResource MutedBrush}"/>
+                        <TextBlock Text="Database: customers.db" FontSize="11"
+                                   Foreground="{StaticResource MutedBrush}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Total Orders" Style="{StaticResource FormLabel}"/>
+                        <TextBlock Text="{Binding TotalOrders}" FontSize="36" FontWeight="Bold"
+                                   Foreground="#7C3AED"/>
+                        <TextBlock Foreground="{StaticResource WarningBrush}" FontSize="12">
+                            <Run Text="{Binding PendingOrders}"/>
+                            <Run Text=" pending"/>
+                        </TextBlock>
+                        <TextBlock Text="Database: orders.db" FontSize="11"
+                                   Foreground="{StaticResource MutedBrush}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Revenue -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Total Revenue" Style="{StaticResource FormLabel}"/>
+                        <TextBlock FontSize="32" FontWeight="Bold" Foreground="{StaticResource SuccessBrush}">
+                            <Run Text="{Binding TotalRevenue, StringFormat={}{0:N0}}"/>
+                            <Run Text=" B"/>
+                        </TextBlock>
+                        <TextBlock Text="Aggregated from orders.db" FontSize="12"
+                                   Foreground="{StaticResource MutedBrush}"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="Generate Full Report"
+                            Style="{StaticResource SuccessButton}"
+                            Command="{Binding ReportCommand}" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Report output -->
+            <Border Style="{StaticResource Card}"
+                    Visibility="{Binding ReportText,
+                                 Converter={x:Static local:StringToVisibilityConverter.Instance},
+                                 ConverterParameter=hide}">
+                <StackPanel>
+                    <TextBlock Text="Summary Report" FontSize="15" FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}" Margin="0,0,0,10"/>
+                    <ScrollViewer Height="280" VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding ReportText}" FontFamily="Consolas" FontSize="12"
+                                   Foreground="{StaticResource TextBrush}" TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
